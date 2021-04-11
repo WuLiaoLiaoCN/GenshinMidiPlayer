@@ -14,10 +14,11 @@
 
 #=============手动设置区=============
 $gameWindowName = "原神"
-$midiFileName = '.\MidiFile\QianBenYing.mid'
-$ToneControl = -16 #调整音调 +16为升一个八度 -16为降一个八度
-$SoundTrackSelect = 2 #0为全局信息 1为第一音轨 2为第二音轨 。。以此类推
-$PlaySpeed = 0.8 #播放速度 取值范围为0.1~2 根据自己需求调整
+$midiFileName = '.\MidiFile\TongHuaZhen.mid'
+$ToneControl = 0 #调整音调 +16为升一个八度 -16为降一个八度
+$SoundTrackSelect1 = 2 #0为全局信息 1为第一音轨 2为第二音轨 。。以此类推
+$SoundTrackSelect2 = 3 
+$PlaySpeed = 1.5 #播放速度 取值范围为0.1~5 根据自己需求调整
 #==================================
 
 $wshell = New-Object -ComObject wscript.shell
@@ -26,10 +27,14 @@ $content = GetMidiContent $midiFileName
 $Midi = SplitMidiContent $content
 GetMidiFormat $Midi
 GetSoundTrackCount $Midi                                                  
-$KeyNotes = GetSoundTrackActions $midi[$SoundTrackSelect]
-$keyPress = GetKeyPressNote($KeyNotes)
-$playPointer = 0
-$KeyCount = $keyPress.count
+$KeyNotes1 = GetSoundTrackActions $midi[$SoundTrackSelect1]
+$keyPress1 = GetKeyPressNote($KeyNotes1)
+$playPointer1 = 0
+$KeyCount1 = $keyPress1.count
+$KeyNotes2 = GetSoundTrackActions $midi[$SoundTrackSelect2]
+$keyPress2 = GetKeyPressNote($KeyNotes2)
+$playPointer2 = 0
+$KeyCount2 = $keyPress2.count
 
 Write-Host '即将开始自动演奏，请打开风物之琴并将原神游戏窗口设为焦点'
 for($i=5;$i -gt 0 ;$i--)
@@ -41,15 +46,21 @@ for($i=5;$i -gt 0 ;$i--)
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 while($true)
 {
-    if($playPointer -ge $KeyCount)
+    if(($playPointer1 -ge $KeyCount1) -and ($playPointer2 -ge $KeyCount2))
     {
         break
     }
 
-    if(($keyPress[$playPointer][0]*$PlaySpeed) -lt $elapsed.Elapsed.TotalMilliseconds)
+    if(($keyPress1[$playPointer1][0]*$PlaySpeed) -lt $elapsed.Elapsed.TotalMilliseconds)
     {
-        $wshell.SendKeys($KeySoundMap[$keyPress[$playPointer][2]+$ToneControl])
-        $playPointer++
+        $wshell.SendKeys($KeySoundMap[$keyPress1[$playPointer1][2]+$ToneControl])
+        $playPointer1++
+    }
+
+    if(($keyPress2[$playPointer2][0]*$PlaySpeed) -lt $elapsed.Elapsed.TotalMilliseconds)
+    {
+        $wshell.SendKeys($KeySoundMap[$keyPress2[$playPointer2][2]+$ToneControl])
+        $playPointer2++
     }
 }
 
