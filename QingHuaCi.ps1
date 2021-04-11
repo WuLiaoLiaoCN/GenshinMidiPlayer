@@ -31,6 +31,13 @@ $keyPress = GetKeyPressNote($KeyNotes)
 $playPointer = 0
 $KeyCount = $keyPress.count
 
+Write-Host '即将开始自动演奏，请打开风物之琴并将原神游戏窗口设为焦点'
+for($i=5;$i -gt 0 ;$i--)
+{
+    Write-Host '自动演奏将在' $i.ToString() '秒后开始'
+    sleep -Seconds 1
+}
+
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 while($true)
 {

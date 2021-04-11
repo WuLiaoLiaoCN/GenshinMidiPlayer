@@ -14,10 +14,10 @@
 
 #=============手动设置区=============
 $gameWindowName = "原神"
-$midiFileName = '.\MidiFile\QianBenYing.mid'
-$ToneControl = -16 #调整音调 +16为升一个八度 -16为降一个八度
+$midiFileName = '.\MidiFile\ZhiAiLiSi.mid'
+$ToneControl = 0 #调整音调 +16为升一个八度 -16为降一个八度
 $SoundTrackSelect = 2 #0为全局信息 1为第一音轨 2为第二音轨 。。以此类推
-$PlaySpeed = 0.8 #播放速度 取值范围为0.1~2 根据自己需求调整
+$PlaySpeed = 3.5 #播放速度 取值范围为0.1~2 根据自己需求调整
 #==================================
 
 $wshell = New-Object -ComObject wscript.shell
@@ -30,6 +30,13 @@ $KeyNotes = GetSoundTrackActions $midi[$SoundTrackSelect]
 $keyPress = GetKeyPressNote($KeyNotes)
 $playPointer = 0
 $KeyCount = $keyPress.count
+
+Write-Host '即将开始自动演奏，请打开风物之琴并将原神游戏窗口设为焦点'
+for($i=5;$i -gt 0 ;$i--)
+{
+    Write-Host '自动演奏将在' $i.ToString() '秒后开始'
+    sleep -Seconds 1
+}
 
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 while($true)
